@@ -7,4 +7,5 @@ test('Open Menu button', async ({ page }) => {
   await mainPage.navigate();
   await mainPage.clickacceptCookies();
   await mainPage.clickmenubutton();
+  await mainPage.clickwhatweoffer();
 });
