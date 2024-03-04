@@ -14,24 +14,24 @@ export class PageObjectModels {
 
         this.acceptCookies = this.page.getByLabel('Accepter alle', {exact: true});
         this.menubutton = this.page.getByText('Menu', {exact: true});
-        this.whatweoffer = this.page.getByRole('heading', {name: 'Hvad vi tilbyder'});
+        this.whatweoffer = this.page.getByRole('button', {name: 'Hvad vi tilbyder'});
     }
 
     async navigate(){
         await this.page.goto('https://prod.knowit.dk/');
     }
-    async 
+    
     async clickacceptCookies(){
         await this.acceptCookies.click();
     }
     async clickmenubutton(){
         await this.menubutton.click();
-        var UUID = randomUUID();
-        await this.page.screenshot({path: './Screenshots/screenshot_'+ UUID +'.png', fullPage: true});
+        
     }
     async clickwhatweoffer(){
         await this.whatweoffer.click();
-       
+        var UUID = randomUUID();
+        await this.page.screenshot({path: './Screenshots/screenshot_'+ UUID +'.png', fullPage: true});
     }
     
 };
