@@ -1,0 +1,104 @@
+import { test, expect } from '@playwright/test';
+
+test('test visibility and interaction', async ({ browser }) => {
+  const context = await browser.newContext({
+    ignoreHTTPSErrors: true,
+  });
+
+  const page = await context.newPage();
+  await page.goto('https://www.uitestingplayground.com/visibility');
+
+  // Array of buttons with their initial visibility status - CAN BE REMOVED UNLESS SUSPECTED THAT BUTTONS MAY TURN INVISIBLE OVERNIGHT.
+  const buttons = [
+    { name: 'Hide', initiallyVisible: true },
+    { name: 'Opacity', initiallyVisible: true },
+    { name: 'Removed', initiallyVisible: true },
+    { name: 'Zero Width', initiallyVisible: true },
+    { name: 'Overlapped', initiallyVisible: true },
+    { name: 'Visibility Hidden', initiallyVisible: true },
+    { name: 'Display None', initiallyVisible: true },
+    { name: 'Offscreen', initiallyVisible: true }
+  ];
+
+  // Check initial visibility for all buttons - CAN BE REMOVED UNLESS SUSPECTED THAT BUTTONS MAY TURN INVISIBLE OVERNIGHT.
+  for (const button of buttons) {
+    const locator = page.getByRole('button', { name: button.name });
+    if (button.initiallyVisible) {
+      await expect(locator).toBeVisible();
+    } else {
+      await expect(locator).not.toBeVisible();
+    }
+  }
+
+  // Click the "Hide" button
+  const hideButton = page.getByRole('button', { name: 'Hide' });
+  await hideButton.click();
+
+  // Array of buttons with their expected visibility after clicking "Hide"
+  const buttonsPostClick = [
+    { name: 'Hide', shouldBeVisible: true },
+    { name: 'Opacity', shouldBeVisible: true },
+    { name: 'Removed', shouldBeVisible: false },
+    { name: 'Zero Width', shouldBeVisible: false },
+    { name: 'Overlapped', shouldBeVisible: true },
+    { name: 'Visibility Hidden', shouldBeVisible: false },
+    { name: 'Display None', shouldBeVisible: false },
+    { name: 'Offscreen', shouldBeVisible: true }
+  ];
+
+  // Check visibility for all buttons after clicking "Hide"
+  for (const button of buttonsPostClick) {
+    const locator = page.getByRole('button', { name: button.name });
+    if (button.shouldBeVisible) {
+      await expect(locator).toBeVisible();
+    } else {
+      await expect(locator).not.toBeVisible();  // Checking for invisibility
+    }
+  }
+});
+
+/* //Can also be done like this: 
+import { test, expect, chromium } from '@playwright/test';
+import { error } from 'console';
+import { Certificate } from 'crypto';
+
+test('test', async ({ browser }) => {
+    const context = await browser.newContext({
+    ignoreHTTPSErrors: true,
+  });
+
+  const page = await context.newPage();
+  await page.goto('https://www.uitestingplayground.com/visibility');
+
+  //ALL BUTTONS ORIGINALLY VISIBLE
+  const Hidebutton=page.getByRole('button', {name:'Hide'})
+  await expect(Hidebutton).toBeVisible();
+  const Opacitybutton=page.getByRole('button', { name: 'Opacity' })
+  await expect(Opacitybutton).toBeVisible();
+  const Removedbutton=page.getByRole('button', { name: 'Removed' })
+  await expect(Removedbutton).toBeVisible();
+  const Zerowidthbutton=page.getByRole('button', { name: 'Zero Width' })
+  await expect(Zerowidthbutton).toBeVisible();
+  const Overlappedbutton=page.getByRole('button', { name: 'Overlapped' })
+  await expect(Overlappedbutton).toBeVisible();
+  const Hiddenbutton=page.getByRole('button', { name: 'Visibility Hidden' })
+  await expect(Hiddenbutton).toBeVisible();
+  const Displaynonebutton=page.getByRole('button', { name: 'Display None' })
+  await expect(Displaynonebutton).toBeVisible();
+  const Offscreenbutton=page.getByRole('button', { name: 'Offscreen' })
+
+  //VISIBLE BUTTON - COMMENT FOR SKIP
+  await expect(Offscreenbutton).toBeVisible();
+  await Hidebutton.click();
+  await expect(Opacitybutton).toBeVisible();  
+  await expect(Overlappedbutton).toBeVisible();
+  await expect(Offscreenbutton).toBeVisible();
+  await expect(Hidebutton).toBeVisible();
+ 
+  //INVISIBLE BUTTONS - UNCOMMENT FOR TEST
+  //await expect(Hiddenbutton).toBeVisible();
+  //await expect(Displaynonebutton).toBeVisible();
+  //await expect(Removedbutton).toBeVisible();
+  //await expect(Zerowidthbutton).toBeVisible();
+  }); */
+
